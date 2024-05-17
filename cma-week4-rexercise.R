@@ -67,7 +67,26 @@ View(Sarah_Wirth_geo_CH)
 filterdays <-Sarah_Wirth_geo_CH |> filter(Datetime >= "2024-03-26 05:08:43", Datetime < "2024-04-06 00:00:00")#as i only have a small amount of timestamps per day i choose to use data from the 26.03 and the 06.04 which contain overall 58 timestamps
 
 ##Task 1 ----
+#as i do not have a fixed sampling rate and my google-data have not picked up many timestamps, and not many twice. Therefore i'll just use it to get rid of the cases where it couldn't localise me precisely, when i was at home.
 
+distance_by_element <- function(later, now) {
+  as.numeric(
+    st_distance(later, now, by_element = TRUE)
+  )
+}
+
+filterdays<- filterdays |>
+  mutate( 
+    nMinus1 = distance_by_element(lag(geometry, 1), geometry),  
+    nPlus1  = distance_by_element(geometry, lead(geometry, 1)) 
+    )
+
+filterdays <- filterdays |>
+  rowwise() |>
+  mutate(
+    stepMean = mean(c(nMinus1, nPlus1))
+  ) |>
+  ungroup()
 
 ##Task 2 ----
 
