@@ -89,7 +89,20 @@ filterdays <- filterdays |>
   ungroup()
 
 ##Task 2 ----
+hist(filterdays$stepMean, breaks=10)#lots of small movements and some big ones
+small_distances<- filter(filterdays, stepMean<5000)
+hist(small_distances$stepMean)#lots below 500
+smaller_distances<-filter(filterdays, stepMean<500)
+hist(smaller_distances$stepMean)#9 below 100
+summary(filterdays$stepMean)#mean is 8170.36
 
+#I would recommend using 100m as a threshold, but as I should use the mean (8170.36), I'll use it although only 14 entries will be left after this. Suggestion for improving the course: use the median instead
+
+filterdays <- filterdays |>
+  mutate(static = stepMean < mean(stepMean, na.rm = TRUE))
+
+new_filterdays <- filterdays |>
+  filter(!static)
 ##Task 3 ----
 
 ##Task 4 ----
