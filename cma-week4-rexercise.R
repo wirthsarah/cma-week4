@@ -64,9 +64,10 @@ Sarah_Wirth_geo_CH |>
   theme(legend.position = "bottom")
 View(Sarah_Wirth_geo_CH)
 
-filterdays <-Sarah_Wirth_geo_CH |> filter(Datetime >= "2024-03-26 05:08:43", Datetime < "2024-03-28 00:00:00")#as i only have a small amount of timestamps per day i choose to use data from the 26.03 and the 27.03 which contain overall 24 timestamps
+filterdays <-Sarah_Wirth_geo_CH |> filter(Datetime >= "2024-03-26 05:08:43", Datetime < "2024-04-06 00:00:00")#as i only have a small amount of timestamps per day i choose to use data from the 26.03 and the 06.04 which contain overall 58 timestamps
 
 ##Task 1 ----
+
 
 ##Task 2 ----
 
