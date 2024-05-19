@@ -7,6 +7,7 @@ library("tmap")
 library("lubridate")
 library("stringr")
 library("tidyr")
+library("ggplot2")
 ##Preparation ----
 
 Sarah_Wirth_Data<-fromJSON("location-history.json")
@@ -95,15 +96,22 @@ hist(small_distances$stepMean)#lots below 500
 smaller_distances<-filter(filterdays, stepMean<500)
 hist(smaller_distances$stepMean)#9 below 100
 summary(filterdays$stepMean)#mean is 8170.36
-
-#I would recommend using 100m as a threshold, but as I should use the mean (8170.36), I'll use it although only 14 entries will be left after this. Suggestion for improving the course: use the median instead
+#my new threshold is 100
 
 filterdays <- filterdays |>
-  mutate(static = stepMean < mean(stepMean, na.rm = TRUE))
+  mutate(static = stepMean < 100)
+filterdays <- filterdays |>  drop_na(stepMean)
 
 new_filterdays <- filterdays |>
   filter(!static)
+
 ##Task 3 ----
+filterdays |>
+  ggplot(aes(X, Y,colour=static)) +
+  geom_path() +
+  geom_point() +
+  coord_equal() +
+  theme(legend.position = "bottom")
 
 ##Task 4 ----
 
