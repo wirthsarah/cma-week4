@@ -130,5 +130,22 @@ filterdays |>
   theme(legend.position = "bottom")
 
 ##Task 5 ----
+pedestrian <-read_delim("pedestrian.csv")
+
+head(pedestrian)
+str(pedestrian)
+summary(pedestrian)
+
+pedestrian |>
+  ggplot(aes(E, N, colour= factor({TrajID})) )+
+  geom_path() +
+  geom_point() +
+  coord_equal() +
+  facet_wrap(vars(TrajID))+
+  ggtitle("Visual comparison of the 6 trajectories", subtitle = "Each subplot highlights a trajectory")+
+  theme(axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank(), 
+        axis.text.y=element_blank(), 
+        axis.ticks.y=element_blank())
 
 ##Task 6 ----
