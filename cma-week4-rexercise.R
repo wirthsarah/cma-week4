@@ -114,6 +114,20 @@ filterdays |>
   theme(legend.position = "bottom")
 
 ##Task 4 ----
+rle_id <- function(vec) {
+  x <- rle(vec)$lengths
+  as.factor(rep(seq_along(x), times = x))
+}
+
+filterdays <- filterdays |>
+  mutate(segment_id = rle_id(static))#7 segments
+
+filterdays |>
+  ggplot(aes(X, Y,colour=segment_id)) +
+  geom_path() +
+  geom_point() +
+  coord_equal() +
+  theme(legend.position = "bottom")
 
 ##Task 5 ----
 
