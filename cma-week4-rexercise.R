@@ -149,3 +149,88 @@ pedestrian |>
         axis.ticks.y=element_blank())
 
 ##Task 6 ----
+#install.packages("SimilarityMeasures")
+library("SimilarityMeasures")
+set.seed(796)
+
+help(package = "SimilarityMeasures")
+
+dftraj1<-pedestrian[pedestrian$TrajID == 1,]
+dftraj2<-pedestrian[pedestrian$TrajID == 2,]
+dftraj3<-pedestrian[pedestrian$TrajID == 3,]
+dftraj4<-pedestrian[pedestrian$TrajID == 4,]
+dftraj5<-pedestrian[pedestrian$TrajID == 5,]
+dftraj6<-pedestrian[pedestrian$TrajID == 6,]
+
+dftraj1<-dftraj1[,2:3]
+dftraj2<-dftraj2[,2:3]
+dftraj3<-dftraj3[,2:3]
+dftraj4<-dftraj4[,2:3]
+dftraj5<-dftraj5[,2:3]
+dftraj6<-dftraj6[,2:3]
+
+##Make  Matrices
+traj1<-data.matrix(dftraj1)
+traj2<-data.matrix(dftraj2)
+traj3<-data.matrix(dftraj3)
+traj4<-data.matrix(dftraj4)
+traj5<-data.matrix(dftraj5)
+traj6<-data.matrix(dftraj6)
+
+TrajCheck(traj1, traj2)
+TrajCheck(traj1, traj3)
+TrajCheck(traj1, traj4)
+TrajCheck(traj1, traj5)
+TrajCheck(traj1, traj6)# all fine
+
+#trajectories i percieve to be most similar:1 and 6
+
+#trajectories i percieve to be most dissimilar:2 and 4, although i can't really compare them. but 1 and 4 also seem quite dissimilar
+
+dtw12 <-DTW(traj1,traj2)
+dtw13 <-DTW(traj1,traj3)
+dtw14 <-DTW(traj1,traj4)
+dtw15 <-DTW(traj1,traj5)
+dtw16 <-DTW(traj1,traj6)
+
+ed12 <-EditDist(traj1,traj2)
+ed13 <-EditDist(traj1,traj3)
+ed14 <-EditDist(traj1,traj4)
+ed15 <-EditDist(traj1,traj5)
+ed16 <-EditDist(traj1,traj6)
+
+fr12 <-Frechet(traj1,traj2)
+fr13 <-Frechet(traj1,traj3)
+fr14 <-Frechet(traj1,traj4)
+fr15 <-Frechet(traj1,traj5)
+fr16 <-Frechet(traj1,traj6)
+
+lc12 <-LCSS(traj1,traj2, pointSpacing = 1, errorMarg=3)
+lc13 <-LCSS(traj1,traj3, pointSpacing = 1, errorMarg=3)
+lc14 <-LCSS(traj1,traj4, pointSpacing = 1, errorMarg=3)
+lc15 <-LCSS(traj1,traj5, pointSpacing = 1, errorMarg=3)
+lc16 <-LCSS(traj1,traj6, pointSpacing = 1, errorMarg=3)
+
+DTW<-rbind(dtw12,dtw13,dtw14,dtw15,dtw16)
+ed<-rbind(ed12,ed13,ed14,ed15,ed16)
+fr<-rbind(fr12,fr13,fr14,fr15,fr16)
+lc<- rbind(lc12,lc13,lc14,lc15,lc16)
+
+metrics <-rbind(DTW,ed,fr,lc)
+names <- c("DTW","Edit_Dist","Frechet","LCSS")
+namecol <-rep(names, each=5)
+values <-rep(c("2","3","4","5","6"), times= 4)
+results<-data.frame(cbind(metrics,namecol, values))
+
+results$V1<-as.numeric(results$V1)
+
+results |>
+  ggplot(aes(values,V1, fill=values)) +
+  geom_col()+
+  facet_wrap(vars(namecol), scales = "free_y")+
+  ggtitle("Computed similarities using different measures between trajectory 1 and all other trajectories")+
+  theme(axis.line=element_line())+
+  ylab("Value")+
+  xlab("Comparison trajectory")
+
+#my results show similar results to those from the pt-github page, but the LCSS for trajectory 6 was lots longer than in the example due to me choosing the error margin quite big.
